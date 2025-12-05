@@ -39,11 +39,7 @@ AI Module Setup
  Backend Setup
 1. Navigate to the 'BackEnd' directory.
 2. Install dependencies (create a `requirements.txt` if needed, but generally: `pip install fastapi ultralytics sqlalchemy`).
-3. Run the application:
-   ```bash
-   uvicorn main:app --reload
-   ```
-   *(Note: Ensure the proper python package structure for `app` is in place).*
+3. Run the application
 
 ## Documentation
 For a deep dive into the system architecture and theoretical background, refer to the files in the `Documentation` folder:
