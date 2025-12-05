@@ -18,7 +18,6 @@ The repository is organized as follows:
   - PythonCodes: Scripts for dataset manipulation and training
 - Directory: BackEnd - The server-side application.
   -main.py: Entry point for the FastAPI application.
-  - *(Note: The backend seems to expect an app package structure which is currently being set up).*
 - Directory: FrontEnd - (In Development) Source code for the web dashboard.
 - Directory: DroneFiles - Configuration and flight control scripts for physical drones.
 - Directory: Documentation - Project documentation files.
