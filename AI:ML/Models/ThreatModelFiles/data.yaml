@@ -1,0 +1,13 @@
+
+
+train: "D:/Van vihar_ EPICS/EPICS_mlModel2/Threats/train"
+val: "D:/Van vihar_ EPICS/EPICS_mlModel2/Threats/val"
+test: "D:/Van vihar_ EPICS/EPICS_mlModel2/Threats/test"
+
+nc: 5
+names:
+  0: gun
+  1: heavy-weapon
+  2: knife
+  3: human 
+  4: fire_smoke 
