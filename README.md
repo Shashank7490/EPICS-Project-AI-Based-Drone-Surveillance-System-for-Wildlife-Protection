@@ -39,6 +39,28 @@ AI Module Setup
 1. Navigate to the 'BackEnd' directory.
 2. Install dependencies (create a `requirements.txt` if needed, but generally: `pip install fastapi ultralytics sqlalchemy`).
 3. Run the application
+   
+Frontend Setup
+Tech Stack: React 19 + Vite + Framer Motion
+
+Design: Dark futuristic theme with neon blue (#00d4ff) accents, premium animations
+
+Components:
+Hero section with animated text
+Interactive technology cards
+Scroll-triggered 3D features
+Timeline with 12-month development phases
+Application areas with parallax effects
+Contact section
+
+Key Features:
+Smooth scroll animations using Framer Motion
+Responsive design (mobile to desktop)
+Content managed via 
+content.js
+CSS custom properties for theming
+Optimized performance with lazy loading
+Structure: Single-page application with modular components, each with dedicated CSS files.
 
 ## Documentation
 For a deep dive into the system architecture and theoretical background, refer to the files in the `Documentation` folder:
