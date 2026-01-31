@@ -1,7 +1,0 @@
-# Conceptual logic for a surveillance sweep
-1. TAKE_OFF (Altitude: 30m)
-2. WAYPOINT (Lat: 45.123, Lon: -93.456, Alt: 50m)
-3. SET_SERVO (Camera_Gimbal, Angle: -45) # Tilt camera down
-4. LOITER_TIME (Seconds: 30)           # Hover and scan
-5. WAYPOINT (Lat: 45.125, Lon: -93.458, Alt: 50m)
-6. RETURN_TO_LAUNCH (RTL)
