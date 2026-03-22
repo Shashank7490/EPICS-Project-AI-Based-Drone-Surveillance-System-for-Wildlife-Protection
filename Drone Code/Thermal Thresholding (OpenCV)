@@ -1,0 +1,25 @@
+import cv2
+import numpy as np
+
+def detect_heat_sources(thermal_frame, temp_threshold=100):
+    """
+    thermal_frame: Grayscale array where pixel value = temperature
+    temp_threshold: Degrees Celsius to trigger an alert
+    """
+    # 1. Apply threshold: pixels above temp_threshold become white (255)
+    _, thermal_binary = cv2.threshold(thermal_frame, temp_threshold, 255, cv2.THRESH_BINARY)
+    
+    # 2. Clean up noise (remove small hot pixels)
+    kernel = np.ones((5,5), np.uint8)
+    thermal_binary = cv2.morphologyEx(thermal_binary, cv2.MORPH_OPEN, kernel)
+    
+    # 3. Find contours (blobs of heat)
+    contours, _ = cv2.findContours(thermal_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    heat_blobs = []
+    for cnt in contours:
+        x, y, w, h = cv2.boundingRect(cnt)
+        if w * h > 50: # Minimum size to ignore birds/small animals
+            heat_blobs.append((x, y, w, h))
+            
+    return heat_blobs, thermal_binary
