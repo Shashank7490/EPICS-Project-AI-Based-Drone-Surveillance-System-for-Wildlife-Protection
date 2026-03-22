@@ -1,0 +1,21 @@
+def sensor_fusion_decision(rgb_detections, thermal_detections):
+    """
+    Combines visual labels (YOLO) with thermal blobs.
+    """
+    is_confirmed_threat = False
+    priority = "LOW"
+
+    # Example Logic
+    has_smoke_visual = any(d['label'] == 'smoke' for d in rgb_detections)
+    has_heat_blob = len(thermal_detections) > 0
+
+    if has_smoke_visual and has_heat_blob:
+        priority = "CRITICAL" # Likely an active fire
+        is_confirmed_threat = True
+    elif has_heat_blob:
+        priority = "MEDIUM"   # Possible trespasser or campfire
+        is_confirmed_threat = True
+    elif has_smoke_visual:
+        priority = "LOW"      # Likely fog or low-risk anomaly
+        
+    return is_confirmed_threat, priority
