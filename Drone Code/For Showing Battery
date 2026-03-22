@@ -1,1 +1,35 @@
+from dronekit import connect
+import time
+
+# Connect to the Flight Controller
+vehicle = connect('127.0.0.1:14550', wait_ready=True)
+
+def monitor_battery():
+    while True:
+        # Fetch battery attributes
+        voltage = vehicle.battery.voltage
+        current = vehicle.battery.current
+        level = vehicle.battery.level # Percentage remaining
+
+        print(f"--- Battery Status ---")
+        print(f"Voltage: {voltage}V")
+        print(f"Current Draw: {current}A")
+        print(f"Percentage: {level}%")
+
+        # Basic Logic for Forest Safety
+        if level < 25:
+            print("WARNING: Battery low! Consider returning to launch.")
+        
+        if level < 15:
+            print("CRITICAL: Battery critical! Emergency landing or RTL required.")
+            # vehicle.mode = VehicleMode("RTL") # Uncomment to automate return
+
+        time.sleep(2) # Update every 2 seconds
+
+# Start monitoring
+try:
+    monitor_battery()
+except KeyboardInterrupt:
+    print("Monitoring stopped.")
+    vehicle.close()
 
