@@ -1,0 +1,32 @@
+import requests
+import json
+import cv2
+
+def upload_alert(vehicle, label, frame):
+    url = "http://base-station-ip:8000/report_threat"
+    
+    # 1. Create JSON Alert Packet
+    payload = {
+        "timestamp": datetime.datetime.now().strftime("%H%M%S"),
+        "label": label,
+        "lat": vehicle.location.global_frame.lat,
+        "lon": vehicle.location.global_frame.lon,
+        "alt": vehicle.location.global_frame.alt,
+        "battery": vehicle.battery.level
+    }
+    
+    # 2. Prepare Image Snapshot
+    # Encode frame to JPG in memory
+    _, img_encoded = cv2.imencode('.jpg', frame)
+    
+    files = {
+        "image": ("snapshot.jpg", img_encoded.tobytes(), "image/jpeg")
+    }
+    
+    # 3. Send REST API Call
+    try:
+        response = requests.post(url, data={"packet": json.dumps(payload)}, files=files, timeout=5)
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Failed to send alert: {e}")
+        return False
