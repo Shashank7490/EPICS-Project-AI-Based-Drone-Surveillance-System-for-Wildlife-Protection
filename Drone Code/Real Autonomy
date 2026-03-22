@@ -1,0 +1,57 @@
+from dronekit import connect, VehicleMode
+import time
+
+class ForestDrone:
+    def __init__(self):
+        self.vehicle = connect('127.0.0.1:14550', wait_ready=True)
+        self.state = "SEARCH" # Initial State
+
+    def run(self):
+        while True:
+            if self.state == "SEARCH":
+                self.handle_search()
+            elif self.state == "TRACK":
+                self.handle_track()
+            elif self.state == "INVESTIGATE":
+                self.handle_investigate()
+            elif self.state == "RETURN_HOME":
+                self.handle_return()
+            elif self.state == "EMERGENCY_LAND":
+                self.handle_emergency()
+            
+            # Global Failsafe: Check battery in every loop
+            if self.vehicle.battery.level < 15:
+                self.state = "EMERGENCY_LAND"
+            
+            time.sleep(1)
+
+    def handle_search(self):
+        print("State: SEARCHING - Flying grid pattern...")
+        # Code to move to next waypoint
+        # If ML model detects something:
+        # self.state = "INVESTIGATE"
+        pass
+
+    def handle_investigate(self):
+        print("State: INVESTIGATE - Dropping altitude to 15m for closer look...")
+        self.vehicle.simple_goto(target_location, groundspeed=2)
+        # If confirmed: self.state = "TRACK"
+        # If false alarm: self.state = "SEARCH"
+        pass
+
+    def handle_track(self):
+        print("State: TRACKING - Following moving target...")
+        # Use ML bounding box to adjust drone position
+        pass
+
+    def handle_return(self):
+        print("State: RETURNING - Mission complete.")
+        self.vehicle.mode = VehicleMode("RTL")
+
+    def handle_emergency(self):
+        print("State: EMERGENCY - Landing immediately!")
+        self.vehicle.mode = VehicleMode("LAND")
+
+# Start the drone
+my_drone = ForestDrone()
+my_drone.run()
