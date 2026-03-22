@@ -1,0 +1,6 @@
+def trigger_emergency(reason):
+    print(f"EMERGENCY: {reason}")
+    # Set the 'Failsafe' bit in the flight controller
+    vehicle.mode = VehicleMode("LAND")
+    # Log coordinates for recovery
+    log_detection("EMERGENCY_LAND_LOCATION", vehicle)
