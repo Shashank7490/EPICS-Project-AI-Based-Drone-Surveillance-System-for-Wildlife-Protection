@@ -1,0 +1,5 @@
+def check_proximity(my_loc, other_drone_loc):
+    distance = calculate_distance(my_loc, other_drone_loc)
+    if distance < 50: # 50-meter safety bubble
+        print("COOPERATIVE AVOIDANCE: Adjusting Altitude")
+        vehicle.simple_goto(LocationGlobalRelative(lat, lon, alt + 10))
