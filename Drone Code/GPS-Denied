@@ -1,0 +1,5 @@
+def check_gps_quality(vehicle):
+    # HDOP (Horizontal Dilution of Precision) - lower is better
+    if vehicle.gps_0.eph > 200: # eph is in cm; 200 = 2 meters
+        print("GPS Accuracy degrading. Pausing mission to hover.")
+        vehicle.mode = VehicleMode("LOITER")
