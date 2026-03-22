@@ -1,0 +1,23 @@
+
+import threading
+
+class DualCameraStream:
+    def __init__(self):
+        self.rgb_frame = None
+        self.thermal_frame = None
+        self.running = True
+
+    def start_rgb(self):
+        cap = cv2.VideoCapture(0) # Visual Camera
+        while self.running:
+            _, self.rgb_frame = cap.read()
+
+    def start_thermal(self):
+        cap = cv2.VideoCapture(1) # Thermal Camera
+        while self.running:
+            _, self.thermal_frame = cap.read()
+
+# Start both streams in the background
+streams = DualCameraStream()
+threading.Thread(target=streams.start_rgb).start()
+threading.Thread(target=streams.start_thermal).start()
