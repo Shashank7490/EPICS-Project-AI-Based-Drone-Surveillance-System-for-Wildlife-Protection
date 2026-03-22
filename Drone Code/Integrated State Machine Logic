@@ -1,0 +1,17 @@
+def handle_search(self):
+        print("State: SEARCHING - Executing Grid Pattern")
+        
+        # 1. Generate the grid if not already done
+        if not self.mission_waypoints:
+            self.mission_waypoints = generate_grid(self.boundary_polygon)
+        
+        # 2. Navigate to the next point in the lawn-mower pattern
+        target = self.mission_waypoints[self.current_idx]
+        self.vehicle.simple_goto(LocationGlobalRelative(target[0], target[1], self.base_alt))
+        
+        # 3. Terrain Following: Keep altitude safe above trees
+        adaptive_altitude_check(target_agl=30)
+        
+        # 4. Check for target detection (ML Bridge)
+        if self.object_detected:
+            self.state = "INVESTIGATE"
