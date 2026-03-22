@@ -1,0 +1,38 @@
+def set_gimbal_angle(pitch):
+    print(f"Setting gimbal pitch to {pitch} degrees")
+    # MAV_CMD_DO_MOUNT_CONTROL: pitch, roll, yaw
+    msg = vehicle.message_factory.command_long_encode(
+        0, 0,    # target system, target component
+        mavutil.mavlink.MAV_CMD_DO_MOUNT_CONTROL,
+        0,       # confirmation
+        pitch,   # param1: pitch
+        0,       # param2: roll
+        0,       # param3: yaw
+        0, 0, 0, # param 4-6
+        mavutil.mavlink.MAV_MOUNT_MODE_MAVLINK_TARGETING)
+    vehicle.send_mavlink(msg)
+
+# --- THE SURVEILLANCE MISSION ---
+
+# Step 1: Takeoff to 30m
+arm_and_takeoff(30)
+
+# Step 2: Move to first waypoint at 50m
+goto_waypoint(45.123, -93.456, 50)
+
+# Step 3: Tilt camera down 45 degrees
+set_gimbal_angle(-45)
+
+# Step 4: Loiter/Scan for 30 seconds
+print("Scanning forest area...")
+time.sleep(30)
+
+# Step 5: Move to second waypoint
+goto_waypoint(45.125, -93.458, 50)
+
+# Step 6: Return to Launch
+print("Mission complete. Returning to Home.")
+vehicle.mode = VehicleMode("RTL")
+
+# Close connection
+vehicle.close()
