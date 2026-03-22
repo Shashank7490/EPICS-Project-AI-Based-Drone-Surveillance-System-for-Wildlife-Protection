@@ -1,0 +1,45 @@
+import cv2
+from ultralytics import YOLO
+from dronekit import connect, VehicleMode
+import time
+
+# 1. Connect to the Drone and Load the AI Model
+vehicle = connect('/dev/ttyAMA0', baud=57600) # Physical connection
+model = YOLO('forest_surveillance_model.pt') # Your trained DL model
+
+# 2. Open Camera Stream
+cap = cv2.VideoCapture(0)
+
+print("AI Surveillance System Active...")
+
+while cap.isOpened():
+    success, frame = cap.read()
+    if not success:
+        break
+
+    # 3. RUN MACHINE LEARNING INFERENCE
+    results = model(frame, conf=0.5) # Detect objects with >50% confidence
+
+    for r in results:
+        for box in r.boxes:
+            # Get Label (e.g., 0 = 'Smoke', 1 = 'Human')
+            class_id = int(box.cls[0])
+            label = model.names[class_id]
+
+            print(f"ALERT: {label} detected!")
+
+            # 4. ACTION BASED ON DETECTION
+            if label == "smoke":
+                print("Fire detected! Switching to HOVER mode for inspection.")
+                vehicle.mode = VehicleMode("LOITER") 
+                # Optional: Send GPS coordinates to ground station
+                print(f"Location: {vehicle.location.global_frame}")
+
+    # (Optional) Display the video feed if a monitor is connected
+    # cv2.imshow("Drone AI Feed", results[0].plot())
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+vehicle.close()
