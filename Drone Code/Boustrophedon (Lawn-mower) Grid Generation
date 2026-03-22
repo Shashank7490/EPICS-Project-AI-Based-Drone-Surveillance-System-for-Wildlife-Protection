@@ -1,0 +1,25 @@
+import numpy as np
+from shapely.geometry import Polygon, LineString
+
+def generate_grid(polygon_coords, spacing=20):
+    """
+    polygon_coords: List of (lat, lon) tuples defining the forest boundary
+    spacing: Distance between passes in meters (approx 0.0002 degrees)
+    """
+    poly = Polygon(polygon_coords)
+    minx, miny, maxx, maxy = poly.bounds
+    
+    waypoints = []
+    # Create parallel lines across the bounding box
+    for i, x in enumerate(np.arange(minx, maxx, spacing * 0.00001)):
+        line = LineString([(x, miny), (x, maxy)])
+        intersection = line.intersection(poly)
+        
+        if not intersection.is_empty:
+            # Extract points and flip order every other line for "snake" pattern
+            coords = list(intersection.coords)
+            if i % 2 == 1:
+                coords.reverse()
+            waypoints.extend(coords)
+            
+    return waypoints # List of (lat, lon) for the SEARCH state
