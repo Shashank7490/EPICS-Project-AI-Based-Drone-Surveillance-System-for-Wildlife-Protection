@@ -1,0 +1,23 @@
+def adaptive_altitude_check(target_agl=30):
+    """
+    Adjusts altitude based on real-time Lidar/Rangefinder readings.
+    """
+    # Get distance to the canopy/ground from the Lidar sensor
+    current_agl = vehicle.rangefinder.distance 
+    
+    if current_agl is None: return # Sensor error
+    
+    error = target_agl - current_agl
+    
+    # If we are too low (e.g., a hill or tall tree), climb immediately
+    if error > 2: # 2 meter tolerance
+        new_alt = vehicle.location.relative_alt + error
+        print(f"Terrain rising! Adjusting altitude to {new_alt}m")
+        
+        # Command the drone to climb while maintaining horizontal mission
+        point = LocationGlobalRelative(
+            vehicle.location.global_frame.lat, 
+            vehicle.location.global_frame.lon, 
+            new_alt
+        )
+        vehicle.simple_goto(point)
