@@ -1,0 +1,19 @@
+from collections import deque
+
+class DetectionFilter:
+    def __init__(self, n=8, m=10):
+        self.n = n
+        self.m = m
+        self.buffer = deque(maxlen=m)
+
+    def update(self, detected_bool):
+        self.buffer.append(detected_bool)
+        # Check if true detections meet the threshold
+        if self.buffer.count(True) >= self.n:
+            return True
+        return False
+
+# Usage in your loop:
+# smoke_filter = DetectionFilter(n=8, m=10)
+# if smoke_filter.update(ml_result_is_smoke):
+#     drone.state = "INVESTIGATE"
