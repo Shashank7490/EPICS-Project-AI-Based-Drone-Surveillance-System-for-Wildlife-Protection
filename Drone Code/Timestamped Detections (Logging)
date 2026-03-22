@@ -1,0 +1,13 @@
+import datetime
+import csv
+
+def log_detection(label, vehicle):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    lat = vehicle.location.global_frame.lat
+    lon = vehicle.location.global_frame.lon
+    alt = vehicle.location.global_frame.alt
+
+    with open('forest_log.csv', mode='a') as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, label, lat, lon, alt])
+    print(f"Logged {label} at {lat}, {lon}")
