@@ -1,0 +1,6 @@
+{
+  "drone_id": "FOREST_UNIT_02",
+  "status": "TRACKING",
+  "zone": "SE_QUADRANT",
+  "proximity_alert": ["FOREST_UNIT_01"]
+}
