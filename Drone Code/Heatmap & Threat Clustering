@@ -1,0 +1,25 @@
+from sklearn.cluster import DBSCAN
+import numpy as np
+
+# Example: List of [lat, lon] detections from the flight
+detection_points = np.array([
+    [45.1231, -93.4561],
+    [45.1232, -93.4562],
+    [45.1250, -93.4580], # Outlier
+])
+
+def get_clusters(points):
+    # eps is the max distance between two samples (approx meters in degrees)
+    clustering = DBSCAN(eps=0.0001, min_samples=3).fit(points)
+    
+    unique_labels = set(clustering.labels_)
+    clusters = []
+    
+    for label in unique_labels:
+        if label == -1: continue # Noise
+        # Calculate center of the cluster
+        class_member_mask = (clustering.labels_ == label)
+        cluster_center = points[class_member_mask].mean(axis=0)
+        clusters.append(cluster_center)
+        
+    return clusters # Returns a list of central "threat" coordinates
