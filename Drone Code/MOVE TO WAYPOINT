@@ -1,0 +1,6 @@
+def goto_waypoint(lat, lon, alt):
+    print(f"Moving to Lat: {lat}, Lon: {lon}")
+    point = LocationGlobalRelative(lat, lon, alt)
+    vehicle.simple_goto(point)
+    # Logic to wait until drone reaches the point
+    time.sleep(10) 
