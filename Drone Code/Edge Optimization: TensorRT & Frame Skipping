@@ -1,0 +1,21 @@
+import time
+
+prev_time = 0
+frame_count = 0
+
+while True:
+    ret, frame = cap.read()
+    frame_count += 1
+    
+    # FRAME SKIPPING: Only run AI on every 3rd frame
+    if frame_count % 3 != 0:
+        continue 
+
+    # FPS MONITORING
+    curr_time = time.time()
+    fps = 1 / (curr_time - prev_time)
+    prev_time = curr_time
+    
+    # TENSORRT LOGGING (Conceptual)
+    # Using a .engine file instead of .pt reduces latency by ~4x
+    results = tensorrt_model.inference(frame)
