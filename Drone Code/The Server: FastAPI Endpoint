@@ -1,0 +1,27 @@
+from fastapi import FastAPI, UploadFile, File, Form
+import shutil
+import os
+import json
+
+app = FastAPI()
+
+# Directory to store snapshots of forest threats
+UPLOAD_DIR = "alerts"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+@app.post("/report_threat")
+async def report_threat(
+    packet: str = Form(...),      # JSON string
+    image: UploadFile = File(...) # The JPG file
+):
+    # 1. Parse JSON data
+    data = json.loads(packet)
+    threat_type = data['label']
+    
+    # 2. Save the Image
+    file_path = f"{UPLOAD_DIR}/{data['timestamp']}_{threat_type}.jpg"
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+    
+    print(f"ALERT RECEIVED: {threat_type} at {data['lat']}, {data['lon']}")
+    return {"status": "received", "image_path": file_path}
