@@ -1,0 +1,18 @@
+def safety_supervisor(vehicle):
+    # 1. LINK-LOSS HANDLING (GCS Disconnect)
+    # Most FCs handle this at the hardware level, but we can monitor it in Python
+    if not vehicle.last_heartbeat < 5: # If no heartbeat for 5 seconds
+        print("CRITICAL: Link Loss Detected!")
+        # The hardware usually triggers RTL automatically if configured
+
+    # 2. GPS LOSS HANDLING
+    # If GPS glitch occurs, the drone cannot RTL (it doesn't know where it is).
+    # We must switch to 'LAND' or 'ALT_HOLD' to prevent drifting.
+    if vehicle.gps_0.fix_type < 2: # Lower than 3D Fix
+        print("ALARM: GPS Loss! Switching to Emergency LAND.")
+        vehicle.mode = VehicleMode("LAND") 
+
+    # 3. BATTERY FAILSAFE
+    if vehicle.battery.level < 15:
+        print("Low Battery: Initiating Automatic RTL.")
+        vehicle.mode = VehicleMode("RTL")
